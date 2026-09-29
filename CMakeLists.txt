@@ -1,0 +1,119 @@
+cmake_minimum_required(VERSION 3.20)
+
+project(cpp-004  VERSION 1.0 DESCRIPTION "cpp-004" LANGUAGES CXX)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+#===================================================================================================#
+#                                   Google Test                                                     #
+#===================================================================================================#
+include(FetchContent)
+
+FetchContent_Declare(
+    googletest
+    URL https://github.com/google/googletest/archive/03597a01ee50ed33e9dfd640b249b4be3799d395.zip
+)
+
+FetchContent_MakeAvailable(googletest)
+
+#===================================================================================================#
+#                                    Библиотека tsk001                                              #
+#===================================================================================================#
+add_library(tsk001 STATIC
+    include/tsk001/tsk001.cpp
+)
+
+target_include_directories(tsk001
+    PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
+#===================================================================================================#
+#                                    Библиотека tsk002                                              #
+#===================================================================================================#
+add_library(tsk002 STATIC
+    include/tsk002/tsk002.cpp
+)
+
+target_include_directories(tsk002
+    PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
+#===================================================================================================#
+#                                    Библиотека tsk003                                              #
+#===================================================================================================#
+add_library(tsk003 STATIC
+    include/tsk003/tsk003.cpp
+)
+
+target_include_directories(tsk003
+    PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
+#===================================================================================================#
+#                                    Библиотека tsk004                                              #
+#===================================================================================================#
+add_library(tsk004 STATIC
+    include/tsk004/tsk004.cpp
+)
+
+target_include_directories(tsk004
+    PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
+#===================================================================================================#
+#                                    Библиотека tsk005                                              #
+#===================================================================================================#
+add_library(tsk005 STATIC
+    include/tsk005/tsk005.cpp
+)
+
+target_include_directories(tsk005
+    PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
+#===================================================================================================#
+#                               Основная программа                                                  #
+#===================================================================================================#
+add_executable(cpp-004
+    src/main.cpp
+)
+
+# Подключаем библиотеки tsk001, tsk002, tsk003, tsk004
+target_link_libraries(cpp-004
+    PRIVATE
+        tsk001
+        tsk002
+        tsk003
+        tsk004
+        tsk005
+)
+                
+set_target_properties(cpp-004 PROPERTIES
+                              RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin
+)
+
+#===================================================================================================#
+#                                         Тесты                                                     #
+#===================================================================================================#
+enable_testing()
+
+add_executable(
+    tests
+    tests/test-002.cpp
+    tests/test-004.cpp
+    tests/test-005.cpp)
+
+target_link_libraries(
+    tests
+    PRIVATE
+        tsk001
+        tsk002
+        tsk003
+        tsk004
+        tsk005
+        GTest::gtest_main)
+
+include(GoogleTest)
+
+gtest_discover_tests(tests)
